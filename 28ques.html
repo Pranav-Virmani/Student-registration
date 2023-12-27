@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Form</title>
+    <style>
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h2>Student Form</h2>
+    <form id="studentForm">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required>
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required>
+        <label>Gender:</label>
+        <input type="radio" id="male" name="gender" value="Male" required>
+        <label for="male">Male</label>
+        <input type="radio" id="female" name="gender" value="Female" required>
+        <label for="female">Female</label>
+        <label for="rollNo">Roll No:</label>
+        <input type="text" id="rollNo" name="rollNo" required>
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" required>
+        <label for="hobbies">Hobbies (comma-separated):</label>
+        <input type="text" id="hobbies" name="hobbies" required>
+        <label for="mobileDevice">Mobile Device:</label>
+        <select id="mobileDevice" name="mobileDevice" required>
+            <option value="" disabled selected>Select Mobile Device</option>
+            <option value="iOS">iOS</option>
+            <option value="Android">Android</option>
+        </select>
+        <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+    <hr>
+    <h2>Student Entries</h2>
+    <table id="studentTable">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Roll No</th>
+                <th>Date of Birth</th>
+                <th>Hobbies</th>
+                <th>Mobile Device</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Student entries will be added here dynamically -->
+        </tbody>
+    </table>
+    <hr>
+    <h2>Get Student Details</h2>
+    <label for="getRollNo">Enter Roll No:</label>
+    <input type="text" id="getRollNo">
+    <button type="button" onclick="getStudentDetails()">Get</button>
+    <script>
+        // Sample students array
+        const students = [
+            
+        ];
+
+        function submitForm() {
+            // Collect form data
+            const formData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                age: document.getElementById('age').value,
+                gender: document.querySelector('input[name="gender"]:checked').value,
+                rollNo: document.getElementById('rollNo').value,
+                dob: document.getElementById('dob').value,
+                hobbies: document.getElementById('hobbies').value.split(',').map(hobby => hobby.trim()),
+                mobileDevice: document.getElementById('mobileDevice').value,
+            };
+
+            // Validate form data (you can customize the validation logic)
+            if (Object.values(formData).some(value => value === '')) {
+                console.log('Please fill in all the required fields.');
+                return;
+            }
+
+            // Create a student object
+            const student = { ...formData };
+
+            // Add student to the array
+            students.push(student);
+
+            // Update the table
+            updateTable();
+
+            // Display dialogue box
+            showDialogueBox('Submitted');
+            console.log('Student added:', student);
+        }
+
+        function getStudentDetails() {
+            const getRollNo = document.getElementById('getRollNo').value;
+            const student = students.find(s => s.rollNo === getRollNo);
+            if (student) {
+                console.log('Student details:', student);
+            } else {
+                console.log('Student not found with Roll No:', getRollNo);
+            }
+        }
+
+        function updateTable() {
+            const tableBody = document.querySelector('#studentTable tbody');
+
+            // Clear existing rows
+            tableBody.innerHTML = '';
+
+            // Add each student as a new row
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                Object.values(student).forEach(value => {
+                    const cell = document.createElement('td');
+                    cell.textContent = value;
+                    row.appendChild(cell);
+                });
+                tableBody.appendChild(row);
+            });
+        }
+
+        function showDialogueBox(message) {
+            const dialogueBox = document.getElementById('dialogueBox');
+            dialogueBox.textContent = message;
+            dialogueBox.style.display = 'block';
+
+            // Hide the dialogue box after 2 seconds (adjust the time as needed)
+            setTimeout(() => {
+                dialogueBox.style.display = 'none';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
